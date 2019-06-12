@@ -567,13 +567,16 @@ void MarlinUI::status_screen() {
 void MarlinUI::kill_screen(PGM_P lcd_msg) {
   init();
   set_alert_status_P(lcd_msg);
+
+  // RED ALERT. RED ALERT.
   #ifdef DISPLAY_LIGHT_TIMEOUT
-  leds.set_color(LEDColorRed());
+    leds.set_color(LEDColorRed());
     #ifdef NEOPIXEL_BKGD_LED_INDEX
       pixels.setPixelColor(NEOPIXEL_BKGD_LED_INDEX, 255, 0, 0, 0);
       pixels.show();
     #endif
   #endif
+
   draw_kill_screen();
 }
 
@@ -731,10 +734,10 @@ void MarlinUI::update() {
       leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
       if (!leds.lights_on) leds.set_default();
     }
-    else if (ELAPSED(ms, leds_off_ms)) {
+    else if (ELAPSED(ms, leds_off_ms))
       leds.set_off();
-    }
   #endif
+
   #if HAS_LCD_MENU
 
     #if LCD_TIMEOUT_TO_STATUS
@@ -796,12 +799,13 @@ void MarlinUI::update() {
       refresh();
       init_lcd(); // May revive the LCD if static electricity killed it
 
+      ms = millis();
+      next_lcd_update_ms = ms + LCD_UPDATE_INTERVAL;  // delay LCD update until after SD activity completes
+
       #ifdef DISPLAY_LIGHT_TIMEOUT
         leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
         if (!leds.lights_on) leds.set_default();
       #endif
-      ms = millis();
-      next_lcd_update_ms = ms + LCD_UPDATE_INTERVAL;  // delay LCD update until after SD activity completes
     }
 
   #endif // SDSUPPORT && SD_DETECT_PIN
