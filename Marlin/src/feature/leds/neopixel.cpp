@@ -47,8 +47,8 @@ Adafruit_NeoPixel pixels(NEOPIXEL_PIXELS, NEOPIXEL_PIN, NEOPIXEL_TYPE + NEO_KHZ8
 void set_neopixel_color(const uint32_t color) {
   for (uint16_t i = 0; i < pixels.numPixels(); ++i) {
     #ifdef NEOPIXEL_BKGD_LED_INDEX
-      if (i == NEOPIXEL_BKGD_LED_INDEX) {
-        if (color != 0x000000) set_neopixel_color_background();
+      if (i == NEOPIXEL_BKGD_LED_INDEX && color != 0x000000) {
+        set_neopixel_color_background();
         continue;
       }
     #endif
