@@ -22,7 +22,7 @@
 
 #include "../inc/MarlinConfigPre.h"
 
-#ifdef DISPLAY_LIGHT_TIMEOUT
+#ifdef LED_BACKLIGHT_TIMEOUT
   #include "../feature/leds/leds.h"
 #endif
 
@@ -569,7 +569,7 @@ void MarlinUI::kill_screen(PGM_P lcd_msg) {
   set_alert_status_P(lcd_msg);
 
   // RED ALERT. RED ALERT.
-  #ifdef DISPLAY_LIGHT_TIMEOUT
+  #ifdef LED_BACKLIGHT_TIMEOUT
     leds.set_color(LEDColorRed());
     #ifdef NEOPIXEL_BKGD_LED_INDEX
       pixels.setPixelColor(NEOPIXEL_BKGD_LED_INDEX, 255, 0, 0, 0);
@@ -728,7 +728,6 @@ void MarlinUI::update() {
   static millis_t next_lcd_update_ms;
   millis_t ms = millis();
 
-  #ifdef DISPLAY_LIGHT_TIMEOUT
     static millis_t leds_off_ms = 0;
     if (powersupply_on) {
       leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
@@ -736,6 +735,7 @@ void MarlinUI::update() {
     }
     else if (ELAPSED(ms, leds_off_ms))
       leds.set_off();
+  #ifdef LED_BACKLIGHT_TIMEOUT
   #endif
 
   #if HAS_LCD_MENU
@@ -802,9 +802,9 @@ void MarlinUI::update() {
       ms = millis();
       next_lcd_update_ms = ms + LCD_UPDATE_INTERVAL;  // delay LCD update until after SD activity completes
 
-      #ifdef DISPLAY_LIGHT_TIMEOUT
         leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
         if (!leds.lights_on) leds.set_default();
+      #ifdef LED_BACKLIGHT_TIMEOUT
       #endif
     }
 
@@ -880,13 +880,16 @@ void MarlinUI::update() {
           encoderPosition += (encoderDiff * encoderMultiplier) / (ENCODER_PULSES_PER_STEP);
           encoderDiff = 0;
         }
+
         #if HAS_LCD_MENU && LCD_TIMEOUT_TO_STATUS
           return_to_status_ms = ms + LCD_TIMEOUT_TO_STATUS;
         #endif
+
         refresh(LCDVIEW_REDRAW_NOW);
-        #ifdef DISPLAY_LIGHT_TIMEOUT
           leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
           if (!leds.lights_on) leds.set_default();
+
+        #ifdef LED_BACKLIGHT_TIMEOUT
         #endif
       }
 
