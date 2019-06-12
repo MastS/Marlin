@@ -728,14 +728,8 @@ void MarlinUI::update() {
   static millis_t next_lcd_update_ms;
   millis_t ms = millis();
 
-    static millis_t leds_off_ms = 0;
-    if (powersupply_on) {
-      leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
-      if (!leds.lights_on) leds.set_default();
-    }
-    else if (ELAPSED(ms, leds_off_ms))
-      leds.set_off();
   #ifdef LED_BACKLIGHT_TIMEOUT
+    leds.update_timeout(powersupply_on);
   #endif
 
   #if HAS_LCD_MENU
@@ -802,9 +796,8 @@ void MarlinUI::update() {
       ms = millis();
       next_lcd_update_ms = ms + LCD_UPDATE_INTERVAL;  // delay LCD update until after SD activity completes
 
-        leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
-        if (!leds.lights_on) leds.set_default();
       #ifdef LED_BACKLIGHT_TIMEOUT
+        leds.reset_timeout(ms);
       #endif
     }
 
@@ -886,10 +879,9 @@ void MarlinUI::update() {
         #endif
 
         refresh(LCDVIEW_REDRAW_NOW);
-          leds_off_ms = ms + DISPLAY_LIGHT_TIMEOUT;
-          if (!leds.lights_on) leds.set_default();
 
         #ifdef LED_BACKLIGHT_TIMEOUT
+          leds.reset_timeout(ms);
         #endif
       }
 
