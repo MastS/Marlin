@@ -34,15 +34,13 @@
 //
 // Servos
 //
-#define SERVO0_PIN         -1//P2_00
-
-#define PS_ON_PIN          P1_28
+#define SERVO0_PIN         P2_00
 
 //
 // Limit Switches
 //
 #define X_MIN_PIN          P1_29
-#define X_MAX_PIN          -1//P1_28
+#define X_MAX_PIN          P1_28
 #define Y_MIN_PIN          P1_27
 #define Y_MAX_PIN          P1_26
 #define Z_MIN_PIN          P1_25
